@@ -146,10 +146,10 @@ $tasks = [
                                         type="checkbox"
                                         <?php if ($task["is_completed"]) echo "checked"; ?>
                                     >
-                                    <span class="checkbox__text"><?=$task["task"]?></span>
+                                    <span class="checkbox__text"><?=$task["task"];?></span>
                                 </label>
                             </td>
-                            <td class="task__date"><?=$task["date"]?></td>
+                            <td class="task__date"><?=$task["date"];?></td>
                             <td class="task__controls"></td>
                         </tr>
                     <?php endforeach; ?>
