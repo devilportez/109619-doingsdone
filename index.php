@@ -1,4 +1,6 @@
 <?php
+// показывать или нет выполненные задачи
+$show_complete_tasks = rand(0, 1);
 $projects = [
     "Все",
     "Входящие",
@@ -136,7 +138,7 @@ $tasks = [
                         <tr
                             class="
                                 tasks__item task
-                                <?php if ($task["is_completed"]) echo "task--completed"; ?>
+                                <?=($task["is_completed"]) ? "task--completed" : ""; ?>
                             "
                         >
                             <td class="task__select">
@@ -144,7 +146,7 @@ $tasks = [
                                     <input
                                         class="checkbox__input visually-hidden"
                                         type="checkbox"
-                                        <?php if ($task["is_completed"]) echo "checked"; ?>
+                                        <?=($task["is_completed"]) ? "checked" : ""; ?>
                                     >
                                     <span class="checkbox__text"><?=$task["task"];?></span>
                                 </label>
