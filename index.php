@@ -98,8 +98,8 @@ $tasks = [
                                     <?php if ($key === 0) echo "main-navigation__list-item--active"; ?>
                                 "
                             >
-                                <a class="main-navigation__list-item-link" href="#"><?=$project;?></a>
-                                <span class="main-navigation__list-item-count"><?=$key;?></span>
+                                <a class="main-navigation__list-item-link" href="#"><?= $project; ?></a>
+                                <span class="main-navigation__list-item-count"><?= $key; ?></span>
                             </li>
                         <?php endforeach; ?>
                     </ul>
@@ -131,7 +131,7 @@ $tasks = [
                             <input
                                 class="checkbox__input visually-hidden"
                                 type="checkbox"
-                                <?=($show_complete_tasks === 1) ? "checked" : "" ?>
+                                <?= ($show_complete_tasks === 1) ? "checked" : ""; ?>
                             >
                             <span class="checkbox__text">Показывать выполненные</span>
                         </a>
@@ -143,7 +143,7 @@ $tasks = [
                         <tr
                             class="
                                 tasks__item task
-                                <?=($task["is_completed"]) ? "task--completed" : ""; ?>
+                                <?= ($task["is_completed"]) ? "task--completed" : ""; ?>
                             "
                         >
                             <td class="task__select">
@@ -151,12 +151,12 @@ $tasks = [
                                     <input
                                         class="checkbox__input visually-hidden"
                                         type="checkbox"
-                                        <?=($task["is_completed"]) ? "checked" : ""; ?>
+                                        <?= ($task["is_completed"]) ? "checked" : ""; ?>
                                     >
-                                    <span class="checkbox__text"><?=$task["task"];?></span>
+                                    <span class="checkbox__text"><?= $task["task"]; ?></span>
                                 </label>
                             </td>
-                            <td class="task__date"><?=$task["date"];?></td>
+                            <td class="task__date"><?= $task["date"]; ?></td>
                             <td class="task__controls"></td>
                         </tr>
                     <?php endforeach; ?>
