@@ -47,6 +47,18 @@ $tasks = [
         "is_completed" => false
     ]
 ];
+function get_tasks_amount ($tasks, $project) {
+    $count = 0;
+    foreach ($tasks as $task) {
+        if ($project === "Все") {
+            $count = count($tasks);
+        }
+        if ($task["category"] === $project) {
+            $count++;
+        }
+    }
+    return $count;
+}
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -95,11 +107,13 @@ $tasks = [
                             <li
                                 class="
                                     main-navigation__list-item
-                                    <?php if ($key === 0) echo "main-navigation__list-item--active"; ?>
+                                    <?= ($key === 0) ? "main-navigation__list-item--active" : ""; ?>
                                 "
                             >
                                 <a class="main-navigation__list-item-link" href="#"><?= $project; ?></a>
-                                <span class="main-navigation__list-item-count"><?= $key; ?></span>
+                                <span class="main-navigation__list-item-count">
+                                    <?= get_tasks_amount($tasks, $project); ?>
+                                </span>
                             </li>
                         <?php endforeach; ?>
                     </ul>
@@ -139,7 +153,7 @@ $tasks = [
                 </div>
 
                 <table class="tasks">
-                    <?php foreach ($tasks as $key => $task): ?>
+                    <?php foreach ($tasks as $task): ?>
                         <tr
                             class="
                                 tasks__item task
