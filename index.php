@@ -49,7 +49,7 @@ $tasks = [
 ];
 function get_tasks_amount ($tasks, $project) {
     $count = 0;
-    foreach ($tasks as $key => $task) {
+    foreach ($tasks as $task) {
         if ($project === "Все") {
             $count = count($tasks);
         }
@@ -153,7 +153,7 @@ function get_tasks_amount ($tasks, $project) {
                 </div>
 
                 <table class="tasks">
-                    <?php foreach ($tasks as $key => $task): ?>
+                    <?php foreach ($tasks as $task): ?>
                         <tr
                             class="
                                 tasks__item task
