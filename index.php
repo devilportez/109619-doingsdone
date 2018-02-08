@@ -40,13 +40,13 @@ $tasks = [
     ],
     [
         "task" => "Купить корм для кота",
-        "date" => "",
+        "date" => "08.02.2018",
         "category" => $projects[4],
         "is_completed" => false
     ],
     [
         "task" => "Заказать пиццу",
-        "date" => "",
+        "date" => "09.02.2018",
         "category" => $projects[4],
         "is_completed" => false
     ]
@@ -63,6 +63,17 @@ function get_tasks_amount ($tasks, $project) {
         }
     }
     return $count;
+}
+
+function get_urgent_task ($date) {
+    $current_timestamp = time();
+    $task_timestamp = strtotime($date);
+    $seconds_in_day = 86400;
+    $difference = floor(($task_timestamp - $current_timestamp) / $seconds_in_day);
+    if ($difference < 1) {
+        return true;
+    }
+    return false;
 }
 
 $page = set_template("templates/index.php", [
