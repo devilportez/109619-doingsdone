@@ -33,6 +33,7 @@
             class="
                 tasks__item task
                 <?= ($task["is_completed"]) ? "task--completed" : ""; ?>
+                <?= get_urgent_task($task["date"]) ? "task--important" : ""; ?>
             "
         >
             <td class="task__select">
