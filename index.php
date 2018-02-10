@@ -84,6 +84,7 @@ if (isset($_GET["id"])) {
         $project_tasks = $tasks;
     } elseif ($project_id > $projects_last_id) {
         http_response_code(404);
+        $message = "Проектов с таким id не найдено.";
     } else {
         foreach ($tasks as $key => $task) {
             if ($projects[$project_id] === $task["category"]) {
@@ -95,10 +96,16 @@ if (isset($_GET["id"])) {
     $project_tasks = $tasks;
 }
 
-$page = set_template("templates/index.php", [
-    "show_complete_tasks" => $show_complete_tasks,
-    "project_tasks" => $project_tasks
-]);
+if (http_response_code() === 404) {
+    $page = set_template("templates/404.php", [
+        "message" => $message
+    ]);
+} else {
+    $page = set_template("templates/index.php", [
+        "show_complete_tasks" => $show_complete_tasks,
+        "project_tasks" => $project_tasks
+    ]);
+}
 
 $layout = set_template("templates/layout.php", [
     "title" => "Дела в порядке",
