@@ -28,7 +28,7 @@
 </div>
 
 <table class="tasks">
-    <?php foreach ($tasks as $task): ?>
+    <?php foreach ($project_tasks as $task): ?>
         <tr
             class="
                 tasks__item task
