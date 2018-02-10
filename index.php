@@ -76,9 +76,23 @@ function get_urgent_task ($date) {
     return false;
 }
 
+if (isset($_GET["id"])) {
+    $project_tasks = [];
+    $project_id = $_GET["id"];
+    if ($project_id === "0") {
+        $project_tasks = $tasks;
+    } else {
+        foreach ($tasks as $key => $task) {
+            if ($projects[$project_id] === $task["category"]) {
+                $project_tasks[] = $tasks[$key];
+            }
+        }
+    }
+}
+
 $page = set_template("templates/index.php", [
     "show_complete_tasks" => $show_complete_tasks,
-    "tasks" => $tasks
+    "project_tasks" => $project_tasks
 ]);
 
 $layout = set_template("templates/layout.php", [
