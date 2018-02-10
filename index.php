@@ -77,9 +77,9 @@ function get_urgent_task ($date) {
 }
 
 if (isset($_GET["id"])) {
+    $project_tasks = [];
     $project_id = $_GET["id"];
     $projects_last_id = count($projects) - 1;
-    $project_tasks = [];
     if ($project_id === "0") {
         $project_tasks = $tasks;
     } elseif ($project_id > $projects_last_id) {
