@@ -35,7 +35,7 @@ function get_urgent_task ($date) {
 
 function filter_tasks ($tasks, $project, $show_complete_tasks) {
     $filtered_tasks = [];
-    if ($project === "Все") {
+    if ($show_complete_tasks && $project === "Все") {
         $filtered_tasks = $tasks;
     }
     foreach ($tasks as $key => $task) {
