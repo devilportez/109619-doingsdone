@@ -45,10 +45,10 @@
                             <li
                                 class="
                                     main-navigation__list-item
-                                    <?= ($key === 0) ? "main-navigation__list-item--active" : ""; ?>
+                                    <?= ((int) $_GET["project_id"] === $key) ? "main-navigation__list-item--active" : ""; ?>
                                 "
                             >
-                                <a class="main-navigation__list-item-link" href="<?= "?id=$key" ?>">
+                                <a class="main-navigation__list-item-link" href="<?= "?project_id=$key" ?>">
                                     <?= htmlspecialchars($project); ?>
                                 </a>
                                 <span class="main-navigation__list-item-count">

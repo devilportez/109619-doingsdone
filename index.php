@@ -76,24 +76,42 @@ function get_urgent_task ($date) {
     return false;
 }
 
-if (isset($_GET["id"])) {
-    $project_tasks = [];
-    $project_id = $_GET["id"];
-    $projects_last_id = count($projects) - 1;
-    if ($project_id === "0") {
-        $project_tasks = $tasks;
-    } elseif ($project_id > $projects_last_id) {
-        http_response_code(404);
-        $message = "Проектов с таким id не найдено.";
-    } else {
-        foreach ($tasks as $key => $task) {
-            if ($projects[$project_id] === $task["category"]) {
-                $project_tasks[] = $tasks[$key];
+function filter_tasks ($tasks, $show_complete_tasks, $project = "Все") {
+    $filtered_tasks = [];
+    foreach ($tasks as $key => $task) {
+        if ($show_complete_tasks) {
+            if ($project === "Все") {
+                $filtered_tasks = $tasks;
+            }
+            if ($project === $task["category"]) {
+                $filtered_tasks[] = $tasks[$key];
+            }
+        } else {
+            if ($project === "Все" && !$task["is_completed"]) {
+                $filtered_tasks[] = $tasks[$key];
+            }
+            if ($project === $task["category"] && !$task["is_completed"]) {
+                $filtered_tasks[] = $tasks[$key];
             }
         }
     }
+    return $filtered_tasks;
+}
+
+if (isset($_GET["project_id"])) {
+    $PROJECT_ALL_TASKS = 0;
+    $project_id = (int) $_GET["project_id"];
+    $project_tasks = [];
+    if ($project_id === $PROJECT_ALL_TASKS) {
+        $project_tasks = filter_tasks($tasks, $show_complete_tasks);
+    } elseif (isset($projects[$project_id])) {
+        $project_tasks = filter_tasks($tasks, $show_complete_tasks, $projects[$project_id]);
+    } else {
+        http_response_code(404);
+        $message = "Проектов с таким id не найдено.";
+    }
 } else {
-    $project_tasks = $tasks;
+    $project_tasks = filter_tasks($tasks, $show_complete_tasks);
 }
 
 if (http_response_code() === 404) {
