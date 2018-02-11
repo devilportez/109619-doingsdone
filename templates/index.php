@@ -48,6 +48,11 @@
                     </span>
                 </label>
             </td>
+            <td class="task__file">
+                <?php if (!empty($task["file_name"])): ?>
+                    <a class="download-link" href="<?= $task["file_url"]; ?>"><?= $task["file_name"]; ?></a>
+                <?php endif; ?>
+            </td>
             <td class="task__date"><?= $task["date"]; ?></td>
             <td class="task__controls"></td>
         </tr>
