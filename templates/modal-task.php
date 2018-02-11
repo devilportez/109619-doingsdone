@@ -32,7 +32,17 @@
         name="project"
         id="project"
       >
-        <option value="Входящие">Входящие</option>
+        <option value="">---</option>
+        <?php foreach ($projects as $project): ?>
+          <option
+            value="<?= $project; ?>"
+            <?php if (isset($_POST["project"])): ?>
+              <?= ($_POST["project"] === $project) ? "selected" : ""; ?>
+            <?php endif; ?>
+          >
+            <?= $project; ?>
+          </option>
+        <?php endforeach; ?>
       </select>
       <?php if (isset($errors["project"])): ?>
           <p class="form__message">
@@ -51,6 +61,7 @@
         id="date"
         value="<?= (isset($_POST["date"])) ? $_POST["date"] : ""; ?>"
         placeholder="Введите дату в формате ДД.ММ.ГГГГ"
+        onfocus="(this.type='date')"
       >
     </div>
 

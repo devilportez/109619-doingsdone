@@ -57,7 +57,9 @@ $tasks = [
 ];
 
 if (isset($_GET["add_task"])) {
-    $add_task = set_template("templates/modal-task.php", []);
+    $add_task = set_template("templates/modal-task.php", [
+        "projects" => array_slice($projects, 1)
+    ]);
 }
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -74,7 +76,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
         if (count($errors)) {
             $add_task = set_template("templates/modal-task.php", [
-                "errors" => $errors
+                "errors" => $errors,
+                "projects" => array_slice($projects, 1)
             ]);
         }
         if (empty($_POST["date"])) {
