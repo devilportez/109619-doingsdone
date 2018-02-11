@@ -61,7 +61,6 @@
         id="date"
         value="<?= (isset($_POST["date"])) ? $_POST["date"] : ""; ?>"
         placeholder="Введите дату в формате ДД.ММ.ГГГГ"
-        onfocus="(this.type='date')"
       >
     </div>
 
