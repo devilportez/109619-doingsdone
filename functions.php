@@ -23,6 +23,7 @@ function get_tasks_amount ($tasks, $project) {
 }
 
 function get_urgent_task ($date) {
+    date_default_timezone_set("Europe/Moscow");
     $current_timestamp = time();
     $task_timestamp = strtotime($date);
     $seconds_in_day = 86400;
@@ -53,5 +54,15 @@ function filter_tasks ($tasks, $project, $show_complete_tasks) {
         }
     }
     return $filtered_tasks;
+}
+
+function upload_file ($file) {
+    if (isset($file["name"])) {
+        $file_name = $file["name"];
+        $file_path = __DIR__ . "/uploads/";
+        $file_url = "/109619-doingsdone/uploads/" . $file_name;
+        move_uploaded_file($file["tmp_name"], $file_path . $file_name);
+    }
+    return $file_url;
 }
 ?>
