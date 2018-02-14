@@ -15,12 +15,12 @@
     </nav>
 
     <label class="checkbox">
-        <a href="/">
+        <a href="<?= "?show_completed" ?>">
             <!--добавить сюда аттрибут "checked", если переменная $show_complete_tasks равна единице-->
             <input
                 class="checkbox__input visually-hidden"
                 type="checkbox"
-                <?= ($show_complete_tasks === 1) ? "checked" : ""; ?>
+                <?= ($show_complete_tasks) ? "checked" : ""; ?>
             >
             <span class="checkbox__text">Показывать выполненные</span>
         </a>

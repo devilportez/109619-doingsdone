@@ -3,9 +3,7 @@ require_once("functions.php");
 
 $PROJECT_ALL_TASKS = 0;
 
-// показывать или нет выполненные задачи
-$show_complete_tasks = rand(0, 1);
-
+$show_complete_tasks = 1;
 $add_task = null;
 
 $projects = [
@@ -96,19 +94,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 
+if (isset($_GET["show_completed"])) {
+    if (isset($_COOKIE["showcompl"])) {
+        $show_complete_tasks = ($_COOKIE["showcompl"] == 1) ? 0 : 1;
+    }
+    setcookie("showcompl", $show_complete_tasks, strtotime("+30 days"), "/");
+    header("Location: /109619-doingsdone/index.php");
+}
+
 if (isset($_GET["project_id"])) {
     $project_id = (int) $_GET["project_id"];
     $project_tasks = [];
     if ($project_id === $PROJECT_ALL_TASKS) {
-        $project_tasks = filter_tasks($tasks, $projects[$PROJECT_ALL_TASKS], $show_complete_tasks);
+        $project_tasks = filter_tasks($tasks, $projects[$PROJECT_ALL_TASKS], $_COOKIE["showcompl"]);
     } elseif (isset($projects[$project_id])) {
-        $project_tasks = filter_tasks($tasks, $projects[$project_id], $show_complete_tasks);
+        $project_tasks = filter_tasks($tasks, $projects[$project_id], $_COOKIE["showcompl"]);
     } else {
         http_response_code(404);
         $message = "Проектов с таким id не найдено.";
     }
 } else {
-    $project_tasks = filter_tasks($tasks, $projects[$PROJECT_ALL_TASKS], $show_complete_tasks);
+    $project_tasks = filter_tasks($tasks, $projects[$PROJECT_ALL_TASKS], $_COOKIE["showcompl"]);
 }
 
 if (http_response_code() === 404) {
@@ -117,7 +123,7 @@ if (http_response_code() === 404) {
     ]);
 } else {
     $page = set_template("templates/index.php", [
-        "show_complete_tasks" => $show_complete_tasks,
+        "show_complete_tasks" => $_COOKIE["showcompl"],
         "project_tasks" => $project_tasks
     ]);
 }
