@@ -101,7 +101,7 @@ if (isset($_COOKIE["showcompl"])) {
 
 if (isset($_GET["show_completed"])) {
     setcookie("showcompl", $show_complete_tasks, strtotime("+30 days"), "/");
-    header("Location: /");
+    header("Location: " . $_SERVER["HTTP_REFERER"]);
 }
 
 if (isset($_GET["project_id"])) {
