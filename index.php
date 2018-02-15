@@ -3,7 +3,8 @@ require_once("functions.php");
 
 $PROJECT_ALL_TASKS = 0;
 
-$show_complete_tasks = 1;
+$project_id = 0;
+$show_complete_tasks = 0;
 $add_task = null;
 
 $projects = [
@@ -94,10 +95,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 
+if (isset($_COOKIE["showcompl"])) {
+    $show_complete_tasks = ($_COOKIE["showcompl"] == 1) ? 0 : 1;
+}
+
 if (isset($_GET["show_completed"])) {
-    if (isset($_COOKIE["showcompl"])) {
-        $show_complete_tasks = ($_COOKIE["showcompl"] == 1) ? 0 : 1;
-    }
     setcookie("showcompl", $show_complete_tasks, strtotime("+30 days"), "/");
     header("Location: /");
 }
@@ -106,15 +108,15 @@ if (isset($_GET["project_id"])) {
     $project_id = (int) $_GET["project_id"];
     $project_tasks = [];
     if ($project_id === $PROJECT_ALL_TASKS) {
-        $project_tasks = filter_tasks($tasks, $projects[$PROJECT_ALL_TASKS], $_COOKIE["showcompl"]);
+        $project_tasks = filter_tasks($tasks, $projects[$PROJECT_ALL_TASKS], $show_complete_tasks);
     } elseif (isset($projects[$project_id])) {
-        $project_tasks = filter_tasks($tasks, $projects[$project_id], $_COOKIE["showcompl"]);
+        $project_tasks = filter_tasks($tasks, $projects[$project_id], $show_complete_tasks);
     } else {
         http_response_code(404);
         $message = "Проектов с таким id не найдено.";
     }
 } else {
-    $project_tasks = filter_tasks($tasks, $projects[$PROJECT_ALL_TASKS], $_COOKIE["showcompl"]);
+    $project_tasks = filter_tasks($tasks, $projects[$PROJECT_ALL_TASKS], $show_complete_tasks);
 }
 
 if (http_response_code() === 404) {
@@ -123,7 +125,7 @@ if (http_response_code() === 404) {
     ]);
 } else {
     $page = set_template("templates/index.php", [
-        "show_complete_tasks" => $_COOKIE["showcompl"],
+        "show_complete_tasks" => $show_complete_tasks,
         "project_tasks" => $project_tasks
     ]);
 }
@@ -132,6 +134,7 @@ $layout = set_template("templates/layout.php", [
     "title" => "Дела в порядке",
     "content" => $page,
     "projects" => $projects,
+    "project_id" => $project_id,
     "tasks" => $tasks,
     "add_task" => $add_task
 ]);

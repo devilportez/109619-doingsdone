@@ -45,7 +45,7 @@
                             <li
                                 class="
                                     main-navigation__list-item
-                                    <?= ((int) $_GET["project_id"] === $key) ? "main-navigation__list-item--active" : ""; ?>
+                                    <?= ($project_id === $key) ? "main-navigation__list-item--active" : ""; ?>
                                 "
                             >
                                 <a class="main-navigation__list-item-link" href="<?= "?project_id=$key" ?>">
