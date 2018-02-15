@@ -99,7 +99,7 @@ if (isset($_GET["show_completed"])) {
         $show_complete_tasks = ($_COOKIE["showcompl"] == 1) ? 0 : 1;
     }
     setcookie("showcompl", $show_complete_tasks, strtotime("+30 days"), "/");
-    header("Location: /109619-doingsdone/index.php");
+    header("Location: /");
 }
 
 if (isset($_GET["project_id"])) {
