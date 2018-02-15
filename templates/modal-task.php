@@ -1,5 +1,5 @@
 <div class="modal">
-  <a href="/109619-doingsdone/index.php">
+  <a href="/">
     <button class="modal__close" type="button" name="button">Закрыть</button>
   </a>
 

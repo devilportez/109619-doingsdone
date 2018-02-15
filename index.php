@@ -3,9 +3,8 @@ require_once("functions.php");
 
 $PROJECT_ALL_TASKS = 0;
 
-// показывать или нет выполненные задачи
-$show_complete_tasks = rand(0, 1);
-
+$project_id = 0;
+$show_complete_tasks = 0;
 $add_task = null;
 
 $projects = [
@@ -96,6 +95,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 
+if (isset($_COOKIE["showcompl"])) {
+    $show_complete_tasks = ($_COOKIE["showcompl"] == 1) ? 0 : 1;
+}
+
+if (isset($_GET["show_completed"])) {
+    setcookie("showcompl", $show_complete_tasks, strtotime("+30 days"), "/");
+    header("Location: /");
+}
+
 if (isset($_GET["project_id"])) {
     $project_id = (int) $_GET["project_id"];
     $project_tasks = [];
@@ -126,6 +134,7 @@ $layout = set_template("templates/layout.php", [
     "title" => "Дела в порядке",
     "content" => $page,
     "projects" => $projects,
+    "project_id" => $project_id,
     "tasks" => $tasks,
     "add_task" => $add_task
 ]);
