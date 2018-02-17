@@ -168,6 +168,7 @@ if (isset($_SESSION["user"])) {
         }
     }
 }
+
 if (isset($_GET["logout"])) {
     require_once("logout.php");
 }
