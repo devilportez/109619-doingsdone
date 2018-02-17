@@ -7,6 +7,7 @@ $PROJECT_ALL_TASKS = 0;
 $project_id = 0;
 $show_complete_tasks = 0;
 $modal = null;
+$page = set_template("templates/guest.php", []);
 
 $projects = [
     "Все",
@@ -118,6 +119,10 @@ if (isset($_GET["project_id"])) {
     $project_tasks = filter_tasks($tasks, $projects[$PROJECT_ALL_TASKS], $show_complete_tasks);
 }
 
+if (isset($_GET["login"])) {
+    $modal = set_template("templates/auth_form.php", []);
+}
+
 session_start();
 if (isset($_SESSION["user"])) {
     if (http_response_code() === 404) {
@@ -130,42 +135,36 @@ if (isset($_SESSION["user"])) {
             "show_complete_tasks" => $show_complete_tasks
         ]);
     }
-} else {
-    $page = set_template("templates/guest.php", []);
-    if (isset($_GET["login"])) {
-        $modal = set_template("templates/auth_form.php", []);
+} elseif ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
+    $errors = [];
+    $required_fields = [
+        "email",
+        "password"
+    ];
+    $user = search_user_by_email($users, $_POST["email"]);
+    foreach ($required_fields as $field) {
+        if (empty($_POST[$field])) {
+            $errors[$field] = "Поле обязательно для заполнения";
+        }
     }
-    if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
-        $errors = [];
-        $required_fields = [
-            "email",
-            "password"
-        ];
-        $user = search_user_by_email($users, $_POST["email"]);
-        foreach ($required_fields as $field) {
-            if (empty($_POST[$field])) {
-                $errors[$field] = "Поле обязательно для заполнения";
-            }
-        }
-        if (!empty($_POST["email"]) && !filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
-            $errors["email"] = "E-mail введён некорректно";
-        } elseif (!empty($_POST["email"]) && !$user) {
-            $errors["email"] = "Пользователь не найден";
-        }
-        if (!empty($_POST["password"]) && !password_verify($_POST["password"], $user["password"])) {
-            $errors["password"] = "Пароль введён неверно";
-        }
-        if (count($errors)) {
-            $modal = set_template("templates/auth_form.php", [
-                "errors" => $errors
-            ]);
-        } else {
-            $_SESSION["user"] = $user;
-            $page = set_template("templates/index.php", [
-                "project_tasks" => $project_tasks,
-                "show_complete_tasks" => $show_complete_tasks
-            ]);
-        }
+    if (!empty($_POST["email"]) && !filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
+        $errors["email"] = "E-mail введён некорректно";
+    } elseif (!empty($_POST["email"]) && !$user) {
+        $errors["email"] = "Пользователь не найден";
+    }
+    if (!empty($_POST["password"]) && !password_verify($_POST["password"], $user["password"])) {
+        $errors["password"] = "Пароль введён неверно";
+    }
+    if (count($errors)) {
+        $modal = set_template("templates/auth_form.php", [
+            "errors" => $errors
+        ]);
+    } else {
+        $_SESSION["user"] = $user;
+        $page = set_template("templates/index.php", [
+            "project_tasks" => $project_tasks,
+            "show_complete_tasks" => $show_complete_tasks
+        ]);
     }
 }
 
