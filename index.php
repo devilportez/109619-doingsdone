@@ -57,12 +57,6 @@ $tasks = [
     ]
 ];
 
-if (isset($_GET["add_task"])) {
-    $modal = set_template("templates/modal-task.php", [
-        "projects" => array_slice($projects, 1)
-    ]);
-}
-
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["add_task"])) {
     $errors = [];
     $required_fields = [
@@ -125,6 +119,11 @@ if (isset($_GET["login"])) {
 
 session_start();
 if (isset($_SESSION["user"])) {
+    if (isset($_GET["add_task"])) {
+        $modal = set_template("templates/modal-task.php", [
+            "projects" => array_slice($projects, 1)
+        ]);
+    }
     if (http_response_code() === 404) {
         $page = set_template("templates/404.php", [
             "message" => $message
