@@ -65,4 +65,15 @@ function upload_file ($file) {
     }
     return $file_url;
 }
+
+function search_user_by_email($users, $email) {
+    $found_user = null;
+    foreach ($users as $user) {
+        if ($user["email"] === $email) {
+            $found_user = $user;
+            break;
+        }
+    }
+    return $found_user;
+}
 ?>
