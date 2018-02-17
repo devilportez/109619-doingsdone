@@ -8,63 +8,79 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body class="<?= (isset($add_task)) ? "overlay" : "" ?>"><!--class="overlay"-->
+<body
+    class="
+        <?= (isset($modal)) ? "overlay" : "" ?>
+        <?= (isset($_SESSION["user"])) ? "" : "body-background"; ?>
+    "
+><!--class="overlay"-->
 <h1 class="visually-hidden">Дела в порядке</h1>
 
 <div class="page-wrapper">
-    <div class="container container--with-sidebar">
+    <div
+        class="
+            container
+            <?= (isset($_SESSION["user"])) ? "container--with-sidebar" : ""; ?>
+        "
+    >
         <header class="main-header">
             <a href="#">
                 <img src="img/logo.png" width="153" height="42" alt="Логотип Дела в порядке">
             </a>
 
             <div class="main-header__side">
-                <a class="main-header__side-item button button--plus" href="<?= "?add_task"; ?>">Добавить задачу</a>
+                <?php if (isset($_SESSION["user"])): ?>
+                    <a class="main-header__side-item button button--plus" href="<?= "?add_task"; ?>">Добавить задачу</a>
 
-                <div class="main-header__side-item user-menu">
-                    <div class="user-menu__image">
-                        <img src="img/user-pic.jpg" width="40" height="40" alt="Пользователь">
+                    <div class="main-header__side-item user-menu">
+                        <div class="user-menu__image">
+                            <img src="img/user-pic.jpg" width="40" height="40" alt="Пользователь">
+                        </div>
+
+                        <div class="user-menu__data">
+                            <p><?= $_SESSION["user"]["name"]; ?></p>
+
+                            <a href="<?= "?logout"; ?>">Выйти</a>
+                        </div>
                     </div>
-
-                    <div class="user-menu__data">
-                        <p>Константин</p>
-
-                        <a href="#">Выйти</a>
-                    </div>
-                </div>
+                <?php else: ?>
+                    <a class="main-header__side-item button button--transparent" href="<?= "?login"; ?>">Войти</a>
+                <?php endif; ?>
             </div>
         </header>
 
         <div class="content">
-            <section class="content__side">
-                <h2 class="content__side-heading">Проекты</h2>
+            <?php if (isset($_SESSION["user"])): ?>
+                <section class="content__side">
+                    <h2 class="content__side-heading">Проекты</h2>
 
-                <nav class="main-navigation">
-                    <ul class="main-navigation__list">
-                        <?php foreach ($projects as $key => $project): ?>
-                            <li
-                                class="
-                                    main-navigation__list-item
-                                    <?= ($project_id === $key) ? "main-navigation__list-item--active" : ""; ?>
-                                "
-                            >
-                                <a class="main-navigation__list-item-link" href="<?= "?project_id=$key" ?>">
-                                    <?= htmlspecialchars($project); ?>
-                                </a>
-                                <span class="main-navigation__list-item-count">
-                                    <?= get_tasks_amount($tasks, $project); ?>
-                                </span>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-                </nav>
+                    <nav class="main-navigation">
+                        <ul class="main-navigation__list">
+                            <?php foreach ($projects as $key => $project): ?>
+                                <li
+                                    class="
+                                        main-navigation__list-item
+                                        <?= ($project_id === $key) ? "main-navigation__list-item--active" : ""; ?>
+                                    "
+                                >
+                                    <a class="main-navigation__list-item-link" href="<?= "?project_id=$key" ?>">
+                                        <?= htmlspecialchars($project); ?>
+                                    </a>
+                                    <span class="main-navigation__list-item-count">
+                                        <?= get_tasks_amount($tasks, $project); ?>
+                                    </span>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </nav>
 
-                <a class="button button--transparent button--plus content__side-button" href="#">Добавить проект</a>
-            </section>
+                    <a class="button button--transparent button--plus content__side-button" href="#">Добавить проект</a>
+                </section>
+            <?php endif; ?>
 
             <main class="content__main">
                 <?= $content; ?>
-                <?= $add_task; ?>
+                <?= $modal; ?>
             </main>
         </div>
     </div>
