@@ -48,4 +48,4 @@ ALTER TABLE tasks
   FOREIGN KEY (project_id)
   REFERENCES projects(id);
 
-CREATE INDEX deadline ON tasks(deadline)
+CREATE INDEX deadline ON tasks(deadline);
