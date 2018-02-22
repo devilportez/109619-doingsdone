@@ -1,3 +1,5 @@
+USE `109619-doingsdone`;
+
 -- Добавление пользователей
 INSERT INTO `users` SET
   `signup_date` = '2018-01-31',
