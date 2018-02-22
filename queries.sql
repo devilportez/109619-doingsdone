@@ -18,7 +18,6 @@ INSERT INTO `users` SET
   `password` = '$2y$10$2OxpEH7narYpkOT1H5cApezuzh10tZEEQ2axgFOaKW.55LxIJBgWW';
 
   -- Добавление имен проектов
-INSERT INTO `projects` SET `name` = 'Все', `user_id` = 1;
 INSERT INTO `projects` SET `name` = 'Входящие', `user_id` = 1;
 INSERT INTO `projects` SET `name` = 'Учеба', `user_id` = 1;
 INSERT INTO `projects` SET `name` = 'Работа', `user_id` = 1;
