@@ -56,7 +56,7 @@ INSERT INTO `tasks` SET
   `project_id` = 5;
 
 -- Получение списка из всех проектов для одного пользователя
-SELECT `name` FROM `projects`;
+SELECT `name` FROM `projects` WHERE `id` = 1;
 
 -- Получение списка из всех задач для одного проекта
 SELECT * FROM `tasks` WHERE `project_id` = 4;
