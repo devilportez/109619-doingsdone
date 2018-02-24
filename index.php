@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 require_once("database.php");
 require_once("functions.php");
 
@@ -160,7 +162,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
             "errors" => $errors
         ]);
     } else {
-        session_start();
         $_SESSION["user"] = $user;
         $page = set_template("templates/index.php", [
             "project_tasks" => $project_tasks,
