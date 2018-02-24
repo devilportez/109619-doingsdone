@@ -1,5 +1,7 @@
 <?php
-require_once("dbconn.php");
+if (file_exists("dbconn.php")) {
+    require_once("dbconn.php");
+}
 
 $connection = mysqli_connect(
     $dbconn["host"],
