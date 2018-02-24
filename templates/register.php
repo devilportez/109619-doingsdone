@@ -40,7 +40,7 @@
             name="name"
             id="name"
             value="<?= (isset($_POST["name"])) ? $_POST["name"] : ""; ?>"
-            placeholder="Введите пароль"
+            placeholder="Введите имя"
         >
         <?php if (isset($errors["name"])): ?>
             <p class="form__message">
