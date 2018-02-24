@@ -2,17 +2,17 @@ USE `109619-doingsdone`;
 
 -- Добавление пользователей
 INSERT INTO `users` SET
-  `signup_date` = '2018-01-31',
+  `register_date` = '2018-01-31',
   `email` = 'ignat.v@gmail.com',
   `name` = 'Игнат',
   `password` = '$2y$10$OqvsKHQwr0Wk6FMZDoHo1uHoXd4UdxJG/5UDtUiie00XaxMHrW8ka';
 INSERT INTO `users` SET
-  `signup_date` = '2018-01-31',
+  `register_date` = '2018-01-31',
   `email` = 'kitty_93@li.ru',
   `name` = 'Леночка',
   `password` = '$2y$10$bWtSjUhwgggtxrnJ7rxmIe63ABubHQs0AS0hgnOo41IEdMHkYoSVa';
 INSERT INTO `users` SET
-  `signup_date` = '2018-01-31',
+  `register_date` = '2018-01-31',
   `email` = 'warrior07@mail.ru',
   `name` = 'Руслан',
   `password` = '$2y$10$2OxpEH7narYpkOT1H5cApezuzh10tZEEQ2axgFOaKW.55LxIJBgWW';

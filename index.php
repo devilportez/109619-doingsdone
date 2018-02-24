@@ -1,6 +1,6 @@
 <?php
+require_once("database.php");
 require_once("functions.php");
-require_once("userdata.php");
 
 $PROJECT_ALL_TASKS = 0;
 
@@ -69,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["add_task"])) {
         }
     }
     if (count($errors)) {
-        $modal = set_template("templates/modal-task.php", [
+        $modal = set_template("templates/add_task.php", [
             "errors" => $errors,
             "projects" => array_slice($projects, 1)
         ]);
@@ -90,7 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["add_task"])) {
 }
 
 if (isset($_COOKIE["showcompl"])) {
-    $show_complete_tasks = ($_COOKIE["showcompl"] == 1) ? 0 : 1;
+    $show_complete_tasks = ((int) $_COOKIE["showcompl"] === 1) ? 0 : 1;
 }
 
 if (isset($_GET["show_completed"])) {
@@ -120,7 +120,7 @@ if (isset($_GET["login"])) {
 session_start();
 if (isset($_SESSION["user"])) {
     if (isset($_GET["add_task"])) {
-        $modal = set_template("templates/modal-task.php", [
+        $modal = set_template("templates/add_task.php", [
             "projects" => array_slice($projects, 1)
         ]);
     }
@@ -134,7 +134,9 @@ if (isset($_SESSION["user"])) {
             "show_complete_tasks" => $show_complete_tasks
         ]);
     }
-} elseif ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
+}
+
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
     $errors = [];
     $required_fields = [
         "email",
@@ -165,6 +167,14 @@ if (isset($_SESSION["user"])) {
             "show_complete_tasks" => $show_complete_tasks
         ]);
     }
+}
+
+if (isset($_GET["register"])) {
+    $page = set_template("templates/register.php", []);
+}
+
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["register"])) {
+    require_once("register.php");
 }
 
 if (isset($_GET["logout"])) {
