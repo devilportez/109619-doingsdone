@@ -117,7 +117,6 @@ if (isset($_GET["login"])) {
     $modal = set_template("templates/auth_form.php", []);
 }
 
-session_start();
 if (isset($_SESSION["user"])) {
     if (isset($_GET["add_task"])) {
         $modal = set_template("templates/add_task.php", [
@@ -161,6 +160,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
             "errors" => $errors
         ]);
     } else {
+        session_start();
         $_SESSION["user"] = $user;
         $page = set_template("templates/index.php", [
             "project_tasks" => $project_tasks,

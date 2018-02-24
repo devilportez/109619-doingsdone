@@ -30,6 +30,7 @@ if (count($errors)) {
     $save_user_result = mysqli_stmt_execute($save_user_statement);
     if (!$save_user_result) {
         print(mysqli_error($connection));
+        exit;
     } else {
         header("Location: /?login");
     }
