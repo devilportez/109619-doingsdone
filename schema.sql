@@ -13,7 +13,7 @@ CREATE TABLE `projects` (
 
 CREATE TABLE `users` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `signup_date` DATETIME NOT NULL,
+  `register_date` DATETIME NOT NULL,
   `email` varchar(255) NOT NULL UNIQUE,
   `name` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
