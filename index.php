@@ -143,7 +143,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
         "email",
         "password"
     ];
-    $user = search_user_by_email($users, $_POST["email"]);
+    $user = search_user_by_email($connection, $_POST["email"]);
     foreach ($required_fields as $field) {
         if (empty($_POST[$field])) {
             $errors[$field] = "Поле обязательно для заполнения";
