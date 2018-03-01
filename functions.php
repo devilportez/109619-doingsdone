@@ -36,7 +36,7 @@ function get_urgent_task ($date) {
 
 function filter_tasks ($tasks, $project_id, $show_complete_tasks) {
     $filtered_tasks = [];
-    if ($show_complete_tasks && $project_id) {
+    if ($show_complete_tasks && $project_id === 0) {
         $filtered_tasks = $tasks;
     }
     foreach ($tasks as $key => $task) {
@@ -45,7 +45,7 @@ function filter_tasks ($tasks, $project_id, $show_complete_tasks) {
                 $filtered_tasks[] = $tasks[$key];
             }
         } else {
-            if ($project_id && !$task["done_date"]) {
+            if ($project_id === 0 && !$task["done_date"]) {
                 $filtered_tasks[] = $tasks[$key];
             }
             if ($project_id === $task["project_id"] && !$task["done_date"]) {
@@ -115,16 +115,10 @@ function get_projects ($db_connect, $user_id) {
     return $projects;
 }
 
-function get_tasks ($db_connect, $user_id, $project_id = NULL) {
-    if (isset($project_id)) {
-        $sql_query = "SELECT `done_date`, `name`, `file`, `deadline`, `project_id` FROM `tasks` WHERE `user_id` = ? AND `project_id` = ?";
-        $statement = mysqli_prepare($db_connect, $sql_query);
-        mysqli_stmt_bind_param($statement, "ii", $user_id, $project_id);
-    } else {
-        $sql_query = "SELECT `done_date`, `name`, `file`, `deadline`, `project_id` FROM `tasks` WHERE `user_id` = ?";
-        $statement = mysqli_prepare($db_connect, $sql_query);
-        mysqli_stmt_bind_param($statement, "i", $user_id);
-    }
+function get_tasks ($db_connect, $user_id) {
+    $sql_query = "SELECT `done_date`, `name`, `file`, `deadline`, `project_id` FROM `tasks` WHERE `user_id` = ?";
+    $statement = mysqli_prepare($db_connect, $sql_query);
+    mysqli_stmt_bind_param($statement, "i", $user_id);
     $execute = mysqli_stmt_execute($statement);
     if (!$execute) {
         print(mysqli_error($db_connect));

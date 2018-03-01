@@ -14,7 +14,7 @@ $page = set_template("templates/guest.php", []);
 $modal = null;
 $user_id = (isset($_SESSION["user"])) ? get_user_id($connection, $_SESSION["user"]["email"]) : null;
 $projects = (isset($_SESSION["user"])) ? get_projects($connection, $user_id) : null;
-$tasks = (isset($_SESSION["user"])) ? get_tasks($connection, $user_id) : null;
+$tasks = (isset($_SESSION["user"])) ? get_tasks($connection, $user_id) : [];
 $project_id = 0;
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["add_task"])) {
@@ -58,15 +58,15 @@ if (isset($_GET["project_id"])) {
     $project_id = (int) $_GET["project_id"];
     $project_tasks = [];
     if ($project_id === $PROJECT_ALL_TASKS) {
-        $project_tasks = filter_tasks($tasks, $projects[$PROJECT_ALL_TASKS]["name"], $show_complete_tasks);
+        $project_tasks = filter_tasks($tasks, $projects[$PROJECT_ALL_TASKS]["id"], $show_complete_tasks);
     } elseif (isset($projects[$project_id])) {
-        $project_tasks = filter_tasks($tasks, $projects[$project_id]["name"], $show_complete_tasks);
+        $project_tasks = filter_tasks($tasks, $projects[$project_id]["id"], $show_complete_tasks);
     } else {
         http_response_code(404);
         $message = "Проектов с таким id не найдено.";
     }
 } else {
-    $project_tasks = filter_tasks($tasks, $projects[$PROJECT_ALL_TASKS]["name"], $show_complete_tasks);
+    $project_tasks = filter_tasks($tasks, $projects[$PROJECT_ALL_TASKS]["id"], $show_complete_tasks);
 }
 
 if (isset($_GET["login"])) {
