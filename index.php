@@ -6,51 +6,16 @@ require_once("functions.php");
 
 $PROJECT_ALL_TASKS = 0;
 
+if (isset($_COOKIE["showcompl"])) {
+    $show_complete_tasks = ((int) $_COOKIE["showcompl"] === 1) ? 0 : 1;
+}
+
 $page = set_template("templates/guest.php", []);
 $modal = null;
 $user_id = (isset($_SESSION["user"])) ? get_user_id($connection, $_SESSION["user"]["email"]) : null;
-$project_id = 0;
 $projects = (isset($_SESSION["user"])) ? get_projects($connection, $user_id) : null;
-$show_complete_tasks = 0;
-
-$tasks = [
-    [
-        "task" => "Собеседование в IT компании",
-        "date" => "01.06.2018",
-        "category" => $projects[3]["name"],
-        "is_completed" => false
-    ],
-    [
-        "task" => "Выполнить тестовое задание",
-        "date" => "25.05.2018",
-        "category" => $projects[3]["name"],
-        "is_completed" => false
-    ],
-    [
-        "task" => "Сделать задание первого раздела",
-        "date" => "21.04.2018",
-        "category" => $projects[2]["name"],
-        "is_completed" => true
-    ],
-    [
-        "task" => "Встреча с другом",
-        "date" => "22.04.2018",
-        "category" => $projects[1]["name"],
-        "is_completed" => false
-    ],
-    [
-        "task" => "Купить корм для кота",
-        "date" => "08.02.2018",
-        "category" => $projects[4]["name"],
-        "is_completed" => false
-    ],
-    [
-        "task" => "Заказать пиццу",
-        "date" => "09.02.2018",
-        "category" => $projects[4]["name"],
-        "is_completed" => false
-    ]
-];
+$tasks = (isset($_SESSION["user"])) ? get_tasks($connection, $user_id) : null;
+$project_id = 0;
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["add_task"])) {
     $errors = [];
@@ -74,18 +39,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["add_task"])) {
     } else {
         $format_date = date("d.m.Y", strtotime($_POST["date"]));
     }
-    array_unshift($tasks, [
-        "task" => $_POST["name"],
-        "date" => $format_date,
-        "category" => $_POST["project"],
-        "file_name" => $_FILES["preview"]["name"],
-        "file_url" => upload_file($_FILES["preview"]),
-        "is_completed" => false
-    ]);
-}
-
-if (isset($_COOKIE["showcompl"])) {
-    $show_complete_tasks = ((int) $_COOKIE["showcompl"] === 1) ? 0 : 1;
+    // array_unshift($tasks, [
+    //     "task" => $_POST["name"],
+    //     "date" => $format_date,
+    //     "category" => $_POST["project"],
+    //     "file_name" => $_FILES["preview"]["name"],
+    //     "file_url" => upload_file($_FILES["preview"]),
+    //     "is_completed" => false
+    // ]);
 }
 
 if (isset($_GET["show_completed"])) {
@@ -156,7 +117,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
         ]);
     } else {
         $_SESSION["user"] = $user;
-        header("Location: /index.php");
+        header("Location: /");
     }
 }
 

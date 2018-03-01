@@ -58,7 +58,7 @@
                                                 <?= htmlspecialchars($project["name"]); ?>
                                             </a>
                                             <span class="main-navigation__list-item-count">
-                                                <?= get_tasks_amount($tasks, $project["name"]); ?>
+                                                <?= get_tasks_amount($tasks, $project["id"]); ?>
                                             </span>
                                         </li>
                                     <?php endforeach; ?>
