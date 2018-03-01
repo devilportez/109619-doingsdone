@@ -12,8 +12,8 @@ if (isset($_COOKIE["showcompl"])) {
 
 $page = set_template("templates/guest.php", []);
 $modal = null;
-$user_id = (isset($_SESSION["user"])) ? get_user_id($connection, $_SESSION["user"]["email"]) : null;
-$projects = (isset($_SESSION["user"])) ? get_projects($connection, $user_id) : null;
+$user_id = (isset($_SESSION["user"])) ? get_user_id($connection, $_SESSION["user"]["email"]) : [];
+$projects = (isset($_SESSION["user"])) ? get_projects($connection, $user_id) : [];
 $tasks = (isset($_SESSION["user"])) ? get_tasks($connection, $user_id) : [];
 $project_id = 0;
 
