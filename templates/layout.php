@@ -47,18 +47,18 @@
                             <h2 class="content__side-heading">Проекты</h2>
                             <nav class="main-navigation">
                                 <ul class="main-navigation__list">
-                                    <?php foreach ($projects as $key => $project): ?>
+                                    <?php foreach ($projects as $project): ?>
                                         <li
                                             class="
                                                 main-navigation__list-item
-                                                <?= ($project_id === $key) ? "main-navigation__list-item--active" : ""; ?>
+                                                <?= ($project_id === $project["id"]) ? "main-navigation__list-item--active" : ""; ?>
                                             "
                                         >
-                                            <a class="main-navigation__list-item-link" href="<?= "?project_id=$key" ?>">
-                                                <?= htmlspecialchars($project); ?>
+                                            <a class="main-navigation__list-item-link" href="<?= "?project_id=" . $project["id"]; ?>">
+                                                <?= htmlspecialchars($project["name"]); ?>
                                             </a>
                                             <span class="main-navigation__list-item-count">
-                                                <?= get_tasks_amount($tasks, $project); ?>
+                                                <?= get_tasks_amount($tasks, $project["name"]); ?>
                                             </span>
                                         </li>
                                     <?php endforeach; ?>

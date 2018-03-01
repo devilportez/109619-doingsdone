@@ -6,55 +6,48 @@ require_once("functions.php");
 
 $PROJECT_ALL_TASKS = 0;
 
-$project_id = 0;
-$show_complete_tasks = 0;
-$modal = null;
 $page = set_template("templates/guest.php", []);
-
-$projects = [
-    "Все",
-    "Входящие",
-    "Учеба",
-    "Работа",
-    "Домашние дела",
-    "Авто"
-];
+$modal = null;
+$user_id = (isset($_SESSION["user"])) ? get_user_id($connection, $_SESSION["user"]["email"]) : null;
+$project_id = 0;
+$projects = (isset($_SESSION["user"])) ? get_projects($connection, $user_id) : null;
+$show_complete_tasks = 0;
 
 $tasks = [
     [
         "task" => "Собеседование в IT компании",
         "date" => "01.06.2018",
-        "category" => $projects[3],
+        "category" => $projects[3]["name"],
         "is_completed" => false
     ],
     [
         "task" => "Выполнить тестовое задание",
         "date" => "25.05.2018",
-        "category" => $projects[3],
+        "category" => $projects[3]["name"],
         "is_completed" => false
     ],
     [
         "task" => "Сделать задание первого раздела",
         "date" => "21.04.2018",
-        "category" => $projects[2],
+        "category" => $projects[2]["name"],
         "is_completed" => true
     ],
     [
         "task" => "Встреча с другом",
         "date" => "22.04.2018",
-        "category" => $projects[1],
+        "category" => $projects[1]["name"],
         "is_completed" => false
     ],
     [
         "task" => "Купить корм для кота",
         "date" => "08.02.2018",
-        "category" => $projects[4],
+        "category" => $projects[4]["name"],
         "is_completed" => false
     ],
     [
         "task" => "Заказать пиццу",
         "date" => "09.02.2018",
-        "category" => $projects[4],
+        "category" => $projects[4]["name"],
         "is_completed" => false
     ]
 ];
@@ -104,15 +97,15 @@ if (isset($_GET["project_id"])) {
     $project_id = (int) $_GET["project_id"];
     $project_tasks = [];
     if ($project_id === $PROJECT_ALL_TASKS) {
-        $project_tasks = filter_tasks($tasks, $projects[$PROJECT_ALL_TASKS], $show_complete_tasks);
+        $project_tasks = filter_tasks($tasks, $projects[$PROJECT_ALL_TASKS]["name"], $show_complete_tasks);
     } elseif (isset($projects[$project_id])) {
-        $project_tasks = filter_tasks($tasks, $projects[$project_id], $show_complete_tasks);
+        $project_tasks = filter_tasks($tasks, $projects[$project_id]["name"], $show_complete_tasks);
     } else {
         http_response_code(404);
         $message = "Проектов с таким id не найдено.";
     }
 } else {
-    $project_tasks = filter_tasks($tasks, $projects[$PROJECT_ALL_TASKS], $show_complete_tasks);
+    $project_tasks = filter_tasks($tasks, $projects[$PROJECT_ALL_TASKS]["name"], $show_complete_tasks);
 }
 
 if (isset($_GET["login"])) {
@@ -163,10 +156,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
         ]);
     } else {
         $_SESSION["user"] = $user;
-        $page = set_template("templates/index.php", [
-            "project_tasks" => $project_tasks,
-            "show_complete_tasks" => $show_complete_tasks
-        ]);
+        header("Location: /index.php");
     }
 }
 
