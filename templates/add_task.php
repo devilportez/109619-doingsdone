@@ -24,23 +24,23 @@
             <label class="form__label" for="project">Проект <sup>*</sup></label>
             <select
                 class="
-                form__input
-                form__input--select
-                <?= (isset($errors["project"])) ? "form__input--error" : "" ?>
+                    form__input
+                    form__input--select
+                    <?= (isset($errors["project"])) ? "form__input--error" : "" ?>
                 "
                 name="project"
                 id="project"
             >
                 <option value="">---</option>
                 <?php foreach ($projects as $project): ?>
-                <option
-                    value="<?= $project; ?>"
-                    <?php if (isset($_POST["project"])): ?>
-                    <?= ($_POST["project"] === $project) ? "selected" : ""; ?>
-                    <?php endif; ?>
-                >
-                    <?= $project; ?>
-                </option>
+                    <option
+                        value="<?= $project["name"]; ?>"
+                        <?php if (isset($_POST["project"])): ?>
+                            <?= ($_POST["project"] === $project["name"]) ? "selected" : ""; ?>
+                        <?php endif; ?>
+                    >
+                        <?= $project["name"]; ?>
+                    </option>
                 <?php endforeach; ?>
             </select>
             <?php if (isset($errors["project"])): ?>

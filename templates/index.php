@@ -27,8 +27,8 @@
         <tr
             class="
                 tasks__item task
-                <?= ($task["is_completed"]) ? "task--completed" : ""; ?>
-                <?= get_urgent_task($task["date"]) ? "task--important" : ""; ?>
+                <?= ($task["done_date"]) ? "task--completed" : ""; ?>
+                <?= get_urgent_task($task["deadline"]) ? "task--important" : ""; ?>
             "
         >
             <td class="task__select">
@@ -36,19 +36,21 @@
                     <input
                         class="checkbox__input visually-hidden"
                         type="checkbox"
-                        <?= ($task["is_completed"]) ? "checked" : ""; ?>
+                        <?= ($task["done_date"]) ? "checked" : ""; ?>
                     >
                     <span class="checkbox__text">
-                        <?= htmlspecialchars($task["task"]); ?>
+                        <?= htmlspecialchars($task["name"]); ?>
                     </span>
                 </label>
             </td>
             <td class="task__file">
-                <?php if (!empty($task["file_name"])): ?>
-                    <a class="download-link" href="<?= $task["file_url"]; ?>"><?= $task["file_name"]; ?></a>
+                <?php if (!empty($task["file"])): ?>
+                    <a class="download-link" href="<?= $task["file"]; ?>"><?= $task["file"]; ?></a>
                 <?php endif; ?>
             </td>
-            <td class="task__date"><?= $task["date"]; ?></td>
+            <td class="task__date">
+                <?= ($task["deadline"]) ? date("d.m.y", strtotime($task["deadline"])) : ""; ?>
+            </td>
             <td class="task__controls"></td>
         </tr>
     <?php endforeach; ?>

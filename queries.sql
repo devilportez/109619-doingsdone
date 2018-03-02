@@ -29,32 +29,32 @@ INSERT INTO `tasks` SET
   `name` = 'Собеседование в IT компании',
   `deadline` = '2018-06-01',
   `user_id` = 1,
-  `project_id` = 4;
+  `project_id` = 3;
 INSERT INTO `tasks` SET
   `name` = 'Выполнить тестовое задание',
   `deadline` = '2018-05-25',
   `user_id` = 1,
-  `project_id` = 4;
+  `project_id` = 3;
 INSERT INTO `tasks` SET
+  `done_date` = '2018-01-01',
   `name` = 'Сделать задание первого раздела',
   `deadline` = '2018-04-21',
   `user_id` = 1,
-  `project_id` = 3;
+  `project_id` = 2;
 INSERT INTO `tasks` SET
   `name` = 'Встреча с другом',
-  `deadline` = '2018-04-22',
   `user_id` = 1,
-  `project_id` = 2;
+  `project_id` = 1;
 INSERT INTO `tasks` SET
   `name` = 'Купить корм для кота',
   `deadline` = '2018-02-08',
   `user_id` = 1,
-  `project_id` = 5;
+  `project_id` = 4;
 INSERT INTO `tasks` SET
   `name` = 'Заказать пиццу',
   `deadline` = '2018-02-09',
   `user_id` = 1,
-  `project_id` = 5;
+  `project_id` = 4;
 
 -- Получение списка из всех проектов для одного пользователя
 SELECT `name` FROM `projects` WHERE `id` = 1;
