@@ -9,6 +9,30 @@ function set_template ($template, $data) {
     return "";
 }
 
+function add_project ($db_connect, $user_id, $project_name) {
+    $sql_query = "INSERT INTO `projects` SET `user_id` = ?, `name` = ?";
+    $statement = mysqli_prepare($db_connect, $sql_query);
+    mysqli_stmt_bind_param($statement, "is", $user_id, $project_name);
+    $execute = mysqli_stmt_execute($statement);
+    if (!$execute) {
+        print(mysqli_error($db_connect));
+        exit;
+    }
+    header("Location: /");
+}
+
+function add_task ($db_connect, $task_name, $file, $deadline, $user_id, $project_id) {
+    $sql_query = "INSERT INTO `tasks` SET `create_date` = NOW(), `name` = ?, `file` = ?, `deadline` = ?, `user_id` = ?, `project_id` = ?";
+    $statement = mysqli_prepare($db_connect, $sql_query);
+    mysqli_stmt_bind_param($statement, "sssii", $task_name, $file, $deadline, $user_id, $project_id);
+    $execute = mysqli_stmt_execute($statement);
+    if (!$execute) {
+        print(mysqli_error($db_connect));
+        exit;
+    }
+    header("Location: /");
+}
+
 function get_tasks_amount ($tasks, $project_id) {
     $count = 0;
     foreach ($tasks as $task) {
@@ -60,7 +84,7 @@ function upload_file ($file) {
     if (isset($file["name"])) {
         $file_name = $file["name"];
         $file_path = __DIR__ . "/uploads/";
-        $file_url = "/109619-doingsdone/uploads/" . $file_name;
+        $file_url = "/uploads/" . $file_name;
         move_uploaded_file($file["tmp_name"], $file_path . $file_name);
     }
     return $file_url;
@@ -92,6 +116,19 @@ function get_user_id ($db_connect, $email) {
     return mysqli_fetch_row($result)[0];
 }
 
+function get_project_id ($db_connect, $project_name) {
+    $sql_query = "SELECT `id` FROM `projects` WHERE `name` = ?";
+    $statement = mysqli_prepare($db_connect, $sql_query);
+    mysqli_stmt_bind_param($statement, "s", $project_name);
+    $execute = mysqli_stmt_execute($statement);
+    if (!$execute) {
+        print(mysqli_error($db_connect));
+        exit;
+    }
+    $result = mysqli_stmt_get_result($statement);
+    return mysqli_fetch_row($result)[0];
+}
+
 function get_projects ($db_connect, $user_id) {
     $projects = [
         [
@@ -110,7 +147,7 @@ function get_projects ($db_connect, $user_id) {
     $result = mysqli_stmt_get_result($statement);
     $fetch = mysqli_fetch_all($result, MYSQLI_ASSOC);
     foreach ($fetch as $project) {
-        $projects[] = $project;
+        $projects[$project["id"]] = $project;
     }
     return $projects;
 }
