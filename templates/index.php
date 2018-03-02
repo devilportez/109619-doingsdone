@@ -33,14 +33,16 @@
         >
             <td class="task__select">
                 <label class="checkbox task__checkbox">
-                    <input
-                        class="checkbox__input visually-hidden"
-                        type="checkbox"
-                        <?= ($task["done_date"]) ? "checked" : ""; ?>
-                    >
-                    <span class="checkbox__text">
-                        <?= htmlspecialchars($task["name"]); ?>
-                    </span>
+                    <a href="<?= "?toggle_done=" . $task["id"]; ?>">
+                        <input
+                            class="checkbox__input visually-hidden"
+                            type="checkbox"
+                            <?= ($task["done_date"]) ? "checked" : ""; ?>
+                        >
+                        <span class="checkbox__text">
+                            <?= htmlspecialchars($task["name"]); ?>
+                        </span>
+                    </a>
                 </label>
             </td>
             <td class="task__file">

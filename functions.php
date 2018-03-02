@@ -153,7 +153,7 @@ function get_projects ($db_connect, $user_id) {
 }
 
 function get_tasks ($db_connect, $user_id) {
-    $sql_query = "SELECT `done_date`, `name`, `file`, `deadline`, `project_id` FROM `tasks` WHERE `user_id` = ?";
+    $sql_query = "SELECT `id`, `done_date`, `name`, `file`, `deadline`, `project_id` FROM `tasks` WHERE `user_id` = ?";
     $statement = mysqli_prepare($db_connect, $sql_query);
     mysqli_stmt_bind_param($statement, "i", $user_id);
     $execute = mysqli_stmt_execute($statement);
@@ -163,5 +163,33 @@ function get_tasks ($db_connect, $user_id) {
     }
     $result = mysqli_stmt_get_result($statement);
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
+function toggle_done ($db_connect, $task_id) {
+    $sql_query_get = "SELECT `done_date` FROM `tasks` WHERE `id` = ?";
+    $statement_get = mysqli_prepare($db_connect, $sql_query_get);
+    mysqli_stmt_bind_param($statement_get, "i", $task_id);
+    $execute_get = mysqli_stmt_execute($statement_get);
+    if (!$execute_get) {
+        print(mysqli_error($db_connect));
+        exit;
+    }
+    $result_get = mysqli_stmt_get_result($statement_get);
+    $done_date = mysqli_fetch_row($result_get)[0];
+    if ($done_date) {
+        $sql_query_set = "UPDATE `tasks` SET `done_date` = NULL WHERE `id` = ?";
+    } else {
+        $sql_query_set = "UPDATE `tasks` SET `done_date` = NOW() WHERE `id` = ?";
+    }
+    $statement_set = mysqli_prepare($db_connect, $sql_query_set);
+    mysqli_stmt_bind_param($statement_set, "i", $task_id);
+    $execute_set = mysqli_stmt_execute($statement_set);
+    if (!$execute_set) {
+        print(mysqli_error($db_connect));
+        exit;
+    }
+    $result_set = mysqli_stmt_get_result($statement_set);
+    $done_date = mysqli_fetch_row($result_set)[0];
+    return $done_date;
 }
 ?>

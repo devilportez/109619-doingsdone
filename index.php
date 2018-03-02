@@ -62,6 +62,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["add_task"])) {
     }
 }
 
+if (isset($_GET["toggle_done"])) {
+    $task_id = (int) $_GET["toggle_done"];
+    toggle_done($connection, $task_id);
+    header("Location: " . $_SERVER["HTTP_REFERER"]);
+}
+
 if (isset($_COOKIE["showcompl"])) {
     $show_complete_tasks = ((int) $_COOKIE["showcompl"] === 1) ? 0 : 1;
 }
