@@ -18,7 +18,7 @@ function set_template ($template, $data) {
 
 /**
  * Формирует sql запрос на добавление проекта
- * @param string $db_connect Ресурс подключения
+ * @param mysqli $db_connect Ресурс подключения
  * @param integer $user_id ID пользователя
  * @param string $project_name Имя проекта
  */
@@ -36,7 +36,7 @@ function add_project ($db_connect, $user_id, $project_name) {
 
 /**
  * Формирует sql запрос на добавление задачи
- * @param string $db_connect Ресурс подключения
+ * @param mysqli $db_connect Ресурс подключения
  * @param string $task_name Текст задачи
  * @param string $file Путь к файлу, если он был загружен
  * @param string $deadline Срок выполнения задачи
@@ -165,7 +165,7 @@ function upload_file ($file) {
 
 /**
  * Ищет пользователя по переданному емеилу
- * @param string $db_connect Ресурс подключения
+ * @param mysqli $db_connect Ресурс подключения
  * @param string $email Емеил пользователя
  * @return array Массив с данными найденного пользователя
  */
@@ -184,7 +184,7 @@ function search_user_by_email ($db_connect, $email) {
 
 /**
  * Получает ID пользователя по емеилу
- * @param string $db_connect Ресурс подключения
+ * @param mysqli $db_connect Ресурс подключения
  * @param string $email Емеил пользователя
  * @return integer ID пользователя
  */
@@ -203,7 +203,7 @@ function get_user_id ($db_connect, $email) {
 
 /**
  * Получает ID проекта по его имени
- * @param string $db_connect Ресурс подключения
+ * @param mysqli $db_connect Ресурс подключения
  * @param string $project_name Имя проекта
  * @return integer ID проекта
  */
@@ -222,7 +222,7 @@ function get_project_id ($db_connect, $project_name) {
 
 /**
  * Получает все проекты по ID пользователя
- * @param string $db_connect Ресурс подключения
+ * @param mysqli $db_connect Ресурс подключения
  * @param integer $user_id ID пользователя
  * @return array Массив с проектами
  */
@@ -251,7 +251,7 @@ function get_projects ($db_connect, $user_id) {
 
 /**
  * Получает все задачи по ID пользователя
- * @param string $db_connect Ресурс подключения
+ * @param mysqli $db_connect Ресурс подключения
  * @param integer $user_id ID пользователя
  * @return array Массив с задачами
  */
@@ -271,35 +271,33 @@ function get_tasks ($db_connect, $user_id) {
 /**
  * Переключает задачу на выполненную с проставлением даты выполнения или
  * сбрасыает обратно на NULL по ID задачи
- * @param string $db_connect Ресурс подключения
+ * @param mysqli $db_connect Ресурс подключения
  * @param string $task_id ID задачи
  * @return string Значение поля даты выполнения задачи
  */
 function toggle_done ($db_connect, $task_id) {
-    $sql_query_get = "SELECT `done_date` FROM `tasks` WHERE `id` = ?";
-    $statement_get = mysqli_prepare($db_connect, $sql_query_get);
-    mysqli_stmt_bind_param($statement_get, "i", $task_id);
-    $execute_get = mysqli_stmt_execute($statement_get);
-    if (!$execute_get) {
+    $sql_query = "SELECT `done_date` FROM `tasks` WHERE `id` = ?";
+    $statement = mysqli_prepare($db_connect, $sql_query);
+    mysqli_stmt_bind_param($statement, "i", $task_id);
+    $execute = mysqli_stmt_execute($statement);
+    if (!$execute) {
         print(mysqli_error($db_connect));
         exit;
     }
-    $result_get = mysqli_stmt_get_result($statement_get);
-    $done_date = mysqli_fetch_row($result_get)[0];
+    $result = mysqli_stmt_get_result($statement);
+    $done_date = mysqli_fetch_row($result)[0];
     if ($done_date) {
-        $sql_query_set = "UPDATE `tasks` SET `done_date` = NULL WHERE `id` = ?";
+        $sql_query = "UPDATE `tasks` SET `done_date` = NULL WHERE `id` = ?";
     } else {
-        $sql_query_set = "UPDATE `tasks` SET `done_date` = NOW() WHERE `id` = ?";
+        $sql_query = "UPDATE `tasks` SET `done_date` = NOW() WHERE `id` = ?";
     }
-    $statement_set = mysqli_prepare($db_connect, $sql_query_set);
-    mysqli_stmt_bind_param($statement_set, "i", $task_id);
-    $execute_set = mysqli_stmt_execute($statement_set);
-    if (!$execute_set) {
+    $statement = mysqli_prepare($db_connect, $sql_query);
+    mysqli_stmt_bind_param($statement, "i", $task_id);
+    $execute = mysqli_stmt_execute($statement);
+    if (!$execute) {
         print(mysqli_error($db_connect));
         exit;
     }
-    $result_set = mysqli_stmt_get_result($statement_set);
-    $done_date = mysqli_fetch_row($result_set)[0];
     return $done_date;
 }
 ?>
