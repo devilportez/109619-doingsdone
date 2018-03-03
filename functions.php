@@ -58,7 +58,7 @@ function get_urgent_task ($date) {
     return false;
 }
 
-function filter_tasks ($tasks, $project_id, $show_complete_tasks) {
+function filter_tasks_by_project ($tasks, $project_id, $show_complete_tasks) {
     $filtered_tasks = [];
     if ($show_complete_tasks && $project_id === 0) {
         $filtered_tasks = $tasks;
@@ -75,6 +75,27 @@ function filter_tasks ($tasks, $project_id, $show_complete_tasks) {
             if ($project_id === $task["project_id"] && !$task["done_date"]) {
                 $filtered_tasks[] = $tasks[$key];
             }
+        }
+    }
+    return $filtered_tasks;
+}
+
+function filter_tasks_by_deadline ($tasks, $filter) {
+    date_default_timezone_set("Europe/Moscow");
+    $current_timestamp = time();
+    $seconds_in_day = 86400;
+    $filtered_tasks = [];
+    foreach ($tasks as $key => $task) {
+        $task_timestamp = strtotime($task["deadline"]);
+        $difference = floor(($task_timestamp - $current_timestamp) / $seconds_in_day);
+        if ($filter === "all") {
+            $filtered_tasks = $tasks;
+        } elseif ($filter === "today" && $difference > -2 && $difference < 0) {
+            $filtered_tasks[] = $tasks[$key];
+        } elseif ($filter === "tomorrow" && $difference > -1 && $difference < 1) {
+            $filtered_tasks[] = $tasks[$key];
+        } elseif ($filter === "overdue" && $difference < -1) {
+            $filtered_tasks[] = $tasks[$key];
         }
     }
     return $filtered_tasks;

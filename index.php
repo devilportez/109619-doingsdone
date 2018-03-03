@@ -77,6 +77,11 @@ if (isset($_GET["show_completed"])) {
     header("Location: " . $_SERVER["HTTP_REFERER"]);
 }
 
+if (isset($_GET["filter"])) {
+    setcookie("filter", $_GET["filter"], strtotime("+30 days"), "/");
+    header("Location: " . $_SERVER["HTTP_REFERER"]);
+}
+
 if (isset($_GET["login"])) {
     $modal = set_template("templates/auth_form.php", []);
 }
@@ -86,15 +91,19 @@ if (isset($_SESSION["user"])) {
         $project_id = (int) $_GET["project_id"];
         $project_tasks = [];
         if ($project_id === $PROJECT_ALL_TASKS) {
-            $project_tasks = filter_tasks($tasks, $projects[$PROJECT_ALL_TASKS]["id"], $show_complete_tasks);
+            $project_tasks = filter_tasks_by_project($tasks, $projects[$PROJECT_ALL_TASKS]["id"], $show_complete_tasks);
         } elseif (isset($projects[$project_id])) {
-            $project_tasks = filter_tasks($tasks, $projects[$project_id]["id"], $show_complete_tasks);
+            $project_tasks = filter_tasks_by_project($tasks, $projects[$project_id]["id"], $show_complete_tasks);
         } else {
             http_response_code(404);
             $message = "Проектов с таким id не найдено.";
         }
     } else {
-        $project_tasks = filter_tasks($tasks, $projects[$PROJECT_ALL_TASKS]["id"], $show_complete_tasks);
+        $project_tasks = filter_tasks_by_project($tasks, $projects[$PROJECT_ALL_TASKS]["id"], $show_complete_tasks);
+    }
+    if (isset($_COOKIE["filter"])) {
+        $filter = $_COOKIE["filter"];
+        $project_tasks = filter_tasks_by_deadline($project_tasks, $filter);
     }
     if (isset($_GET["add_project"])) {
         $modal = set_template("templates/add_project.php", []);
