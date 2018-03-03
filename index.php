@@ -12,6 +12,8 @@ $user_id = (isset($_SESSION["user"])) ? get_user_id($connection, $_SESSION["user
 $projects = (isset($_SESSION["user"])) ? get_projects($connection, $user_id) : [];
 $tasks = (isset($_SESSION["user"])) ? get_tasks($connection, $user_id) : [];
 $project_id = 0;
+$show_complete_tasks = 0;
+
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["add_project"])) {
     $errors = [];
@@ -80,6 +82,8 @@ if (isset($_GET["show_completed"])) {
 if (isset($_GET["filter"])) {
     setcookie("filter", $_GET["filter"], strtotime("+30 days"), "/");
     header("Location: " . $_SERVER["HTTP_REFERER"]);
+} else {
+    setcookie("filter", isset($_COOKIE["filter"]) ? $_COOKIE["filter"] : "all", strtotime("+30 days"), "/");
 }
 
 if (isset($_GET["login"])) {

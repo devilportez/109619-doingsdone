@@ -14,7 +14,7 @@
                 type="text"
                 name="email"
                 id="email"
-                value="<?= (isset($_POST["email"]) ? $_POST["email"] : "") ?>"
+                value="<?= (isset($_POST["email"]) ? htmlspecialchars($_POST["email"]) : "") ?>"
                 placeholder="Введите e-mail"
             >
             <?php if (isset($errors["email"])): ?>
@@ -33,7 +33,7 @@
                 type="password"
                 name="password"
                 id="password"
-                value="<?= (isset($_POST["password"]) ? $_POST["password"] : "") ?>"
+                value="<?= (isset($_POST["password"]) ? htmlspecialchars($_POST["password"]) : "") ?>"
                 placeholder="Введите пароль"
             >
             <?php if (isset($errors["password"])): ?>

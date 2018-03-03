@@ -9,7 +9,9 @@
             href="<?= "?filter=all"; ?>"
             class="
                 tasks-switch__item
-                <?= ($_COOKIE["filter"] === "all") ? "tasks-switch__item--active" : ""; ?>
+                <?php if (isset($_COOKIE["filter"])): ?>
+                    <?= ($_COOKIE["filter"] === "all") ? "tasks-switch__item--active" : ""; ?>
+                <?php endif; ?>
             "
         >
             Все задачи
@@ -18,7 +20,9 @@
             href="<?= "?filter=today"; ?>"
             class="
                 tasks-switch__item
-                <?= ($_COOKIE["filter"] === "today") ? "tasks-switch__item--active" : ""; ?>
+                <?php if (isset($_COOKIE["filter"])): ?>
+                    <?= ($_COOKIE["filter"] === "today") ? "tasks-switch__item--active" : ""; ?>
+                <?php endif; ?>
             "
         >
             Повестка дня
@@ -27,7 +31,9 @@
             href="<?= "?filter=tomorrow"; ?>"
             class="
                 tasks-switch__item
-                <?= ($_COOKIE["filter"] === "tomorrow") ? "tasks-switch__item--active" : ""; ?>
+                <?php if (isset($_COOKIE["filter"])): ?>
+                    <?= ($_COOKIE["filter"] === "tomorrow") ? "tasks-switch__item--active" : ""; ?>
+                <?php endif; ?>
             "
         >
             Завтра
@@ -36,7 +42,9 @@
             href="<?= "?filter=overdue"; ?>"
             class="
                 tasks-switch__item
-                <?= ($_COOKIE["filter"] === "overdue") ? "tasks-switch__item--active" : ""; ?>
+                <?php if (isset($_COOKIE["filter"])): ?>
+                    <?= ($_COOKIE["filter"] === "overdue") ? "tasks-switch__item--active" : ""; ?>
+                <?php endif; ?>
             "
         >
             Просроченные
@@ -44,7 +52,6 @@
     </nav>
     <label class="checkbox">
         <a href="<?= "?show_completed" ?>">
-            <!--добавить сюда аттрибут "checked", если переменная $show_complete_tasks равна единице-->
             <input
                 class="checkbox__input visually-hidden"
                 type="checkbox"
@@ -60,7 +67,9 @@
             class="
                 tasks__item task
                 <?= ($task["done_date"]) ? "task--completed" : ""; ?>
-                <?= get_urgent_task($task["deadline"]) ? "task--important" : ""; ?>
+                <?php if (!isset($task["done_date"])): ?>
+                    <?= get_urgent_task($task["deadline"]) ? "task--important" : ""; ?>
+                <?php endif; ?>
             "
         >
             <td class="task__select">
