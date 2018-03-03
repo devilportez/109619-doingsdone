@@ -12,6 +12,27 @@ $user_id = (isset($_SESSION["user"])) ? get_user_id($connection, $_SESSION["user
 $projects = (isset($_SESSION["user"])) ? get_projects($connection, $user_id) : [];
 $tasks = (isset($_SESSION["user"])) ? get_tasks($connection, $user_id) : [];
 $project_id = 0;
+$show_complete_tasks = 0;
+
+
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["add_project"])) {
+    $errors = [];
+    $required_fields = [
+        "name"
+    ];
+    foreach ($required_fields as $field) {
+        if (empty($_POST[$field])) {
+            $errors[$field] = "Поле обязательно для заполнения";
+        }
+    }
+    if (count($errors)) {
+        $modal = set_template("templates/add_project.php", [
+            "errors" => $errors
+        ]);
+    } else {
+        add_project($connection, $user_id, $_POST["name"]);
+    }
+}
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["add_task"])) {
     $errors = [];
@@ -29,20 +50,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["add_task"])) {
             "errors" => $errors,
             "projects" => array_slice($projects, 1)
         ]);
-    }
-    if (empty($_POST["date"])) {
-        $format_date = null;
     } else {
-        $format_date = date("d.m.Y", strtotime($_POST["date"]));
+        $date = (!empty($_POST["date"])) ? $_POST["date"] : null;
+        $file = (!empty($_FILES["preview"]["name"])) ? $_FILES["preview"] : null;
+        add_task(
+            $connection,
+            $_POST["name"],
+            upload_file($file),
+            $date,
+            get_user_id($connection, $_SESSION["user"]["email"]),
+            get_project_id($connection, $_POST["project"])
+        );
     }
-    // array_unshift($tasks, [
-    //     "task" => $_POST["name"],
-    //     "date" => $format_date,
-    //     "category" => $_POST["project"],
-    //     "file_name" => $_FILES["preview"]["name"],
-    //     "file_url" => upload_file($_FILES["preview"]),
-    //     "is_completed" => false
-    // ]);
+}
+
+if (isset($_GET["toggle_done"])) {
+    $task_id = (int) $_GET["toggle_done"];
+    toggle_done($connection, $task_id);
+    header("Location: " . $_SERVER["HTTP_REFERER"]);
 }
 
 if (isset($_COOKIE["showcompl"])) {
@@ -54,6 +79,13 @@ if (isset($_GET["show_completed"])) {
     header("Location: " . $_SERVER["HTTP_REFERER"]);
 }
 
+if (isset($_GET["filter"])) {
+    setcookie("filter", $_GET["filter"], strtotime("+30 days"), "/");
+    header("Location: " . $_SERVER["HTTP_REFERER"]);
+} else {
+    setcookie("filter", isset($_COOKIE["filter"]) ? $_COOKIE["filter"] : "all", strtotime("+30 days"), "/");
+}
+
 if (isset($_GET["login"])) {
     $modal = set_template("templates/auth_form.php", []);
 }
@@ -63,15 +95,22 @@ if (isset($_SESSION["user"])) {
         $project_id = (int) $_GET["project_id"];
         $project_tasks = [];
         if ($project_id === $PROJECT_ALL_TASKS) {
-            $project_tasks = filter_tasks($tasks, $projects[$PROJECT_ALL_TASKS]["id"], $show_complete_tasks);
+            $project_tasks = filter_tasks_by_project($tasks, $projects[$PROJECT_ALL_TASKS]["id"], $show_complete_tasks);
         } elseif (isset($projects[$project_id])) {
-            $project_tasks = filter_tasks($tasks, $projects[$project_id]["id"], $show_complete_tasks);
+            $project_tasks = filter_tasks_by_project($tasks, $projects[$project_id]["id"], $show_complete_tasks);
         } else {
             http_response_code(404);
             $message = "Проектов с таким id не найдено.";
         }
     } else {
-        $project_tasks = filter_tasks($tasks, $projects[$PROJECT_ALL_TASKS]["id"], $show_complete_tasks);
+        $project_tasks = filter_tasks_by_project($tasks, $projects[$PROJECT_ALL_TASKS]["id"], $show_complete_tasks);
+    }
+    if (isset($_COOKIE["filter"])) {
+        $filter = $_COOKIE["filter"];
+        $project_tasks = filter_tasks_by_deadline($project_tasks, $filter);
+    }
+    if (isset($_GET["add_project"])) {
+        $modal = set_template("templates/add_project.php", []);
     }
     if (isset($_GET["add_task"])) {
         $modal = set_template("templates/add_task.php", [

@@ -64,7 +64,12 @@
                                     <?php endforeach; ?>
                                 </ul>
                             </nav>
-                            <a class="button button--transparent button--plus content__side-button" href="#">Добавить проект</a>
+                            <a
+                                class="button button--transparent button--plus content__side-button"
+                                href="<?= "?add_project"; ?>"
+                            >
+                                Добавить проект
+                            </a>
                         </section>
                     <?php elseif (isset($_GET["register"]) || isset($_POST["register"])): ?>
                         <section class="content__side">
