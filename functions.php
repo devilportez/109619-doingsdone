@@ -271,34 +271,37 @@ function get_tasks ($db_connect, $user_id) {
 
 /**
  * Переключает задачу на выполненную с проставлением даты выполнения или
- * сбрасыает обратно на NULL по ID задачи
+ * сбрасыает обратно на NULL по ID задачи и ID пользователя
  * @param mysqli $db_connect Ресурс подключения
  * @param string $task_id ID задачи
- * @return string Значение поля даты выполнения задачи
+ * @param integer $user_id ID пользователя
  */
-function toggle_done ($db_connect, $task_id) {
-    $sql_query = "SELECT `done_date` FROM `tasks` WHERE `id` = ?";
+function toggle_done ($db_connect, $task_id, $user_id) {
+    $sql_query = "SELECT * FROM `tasks` WHERE `id` = ? AND `user_id` = ?";
     $statement = mysqli_prepare($db_connect, $sql_query);
-    mysqli_stmt_bind_param($statement, "i", $task_id);
+    mysqli_stmt_bind_param($statement, "ii", $task_id, $user_id);
     $execute = mysqli_stmt_execute($statement);
     if (!$execute) {
         print(mysqli_error($db_connect));
         exit;
     }
     $result = mysqli_stmt_get_result($statement);
-    $done_date = mysqli_fetch_row($result)[0];
-    if ($done_date) {
-        $sql_query = "UPDATE `tasks` SET `done_date` = NULL WHERE `id` = ?";
+    if (!mysqli_num_rows($result)) {
+        print(mysqli_error($db_connect));
+        exit;
+    }
+    $task = mysqli_fetch_array($result);
+    if ($task["done_date"]) {
+        $sql_query = "UPDATE `tasks` SET `done_date` = NULL WHERE `id` = ? AND `user_id` = ?";
     } else {
-        $sql_query = "UPDATE `tasks` SET `done_date` = NOW() WHERE `id` = ?";
+        $sql_query = "UPDATE `tasks` SET `done_date` = NOW() WHERE `id` = ? AND `user_id` = ?";
     }
     $statement = mysqli_prepare($db_connect, $sql_query);
-    mysqli_stmt_bind_param($statement, "i", $task_id);
+    mysqli_stmt_bind_param($statement, "ii", $task_id, $user_id);
     $execute = mysqli_stmt_execute($statement);
     if (!$execute) {
         print(mysqli_error($db_connect));
         exit;
     }
-    return $done_date;
 }
 ?>
