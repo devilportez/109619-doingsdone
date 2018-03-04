@@ -153,14 +153,14 @@ function filter_tasks_by_deadline ($tasks, $filter) {
  * @return string Путь к файлу
  */
 function upload_file ($file) {
-    if (isset($file["name"]) && file_exists("/uploads")) {
+    if (isset($file["name"]) && file_exists("uploads")) {
         $file_name = $file["name"];
         $file_path = __DIR__ . "/uploads/";
         $file_url = "/uploads/" . $file_name;
         move_uploaded_file($file["tmp_name"], $file_path . $file_name);
         return $file_url;
     }
-    return "";
+    return null;
 }
 
 /**
@@ -202,15 +202,16 @@ function get_user_id ($db_connect, $email) {
 }
 
 /**
- * Получает ID проекта по его имени
+ * Получает ID проекта по его имени и ID пользователя
  * @param mysqli $db_connect Ресурс подключения
  * @param string $project_name Имя проекта
+ * @param integer $user_id ID пользователя
  * @return integer ID проекта
  */
-function get_project_id ($db_connect, $project_name) {
-    $sql_query = "SELECT `id` FROM `projects` WHERE `name` = ?";
+function get_project_id ($db_connect, $project_name, $user_id) {
+    $sql_query = "SELECT `id` FROM `projects` WHERE `name` = ? AND `user_id` = ?";
     $statement = mysqli_prepare($db_connect, $sql_query);
-    mysqli_stmt_bind_param($statement, "s", $project_name);
+    mysqli_stmt_bind_param($statement, "si", $project_name, $user_id);
     $execute = mysqli_stmt_execute($statement);
     if (!$execute) {
         print(mysqli_error($db_connect));

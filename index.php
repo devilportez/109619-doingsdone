@@ -14,7 +14,6 @@ $tasks = (isset($_SESSION["user"])) ? get_tasks($connection, $user_id) : [];
 $project_id = 0;
 $show_complete_tasks = 0;
 
-
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["add_project"])) {
     $errors = [];
     $required_fields = [
@@ -23,6 +22,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["add_project"])) {
     foreach ($required_fields as $field) {
         if (empty($_POST[$field])) {
             $errors[$field] = "Поле обязательно для заполнения";
+        }
+    }
+    foreach ($projects as $project) {
+        if ($_POST["name"] === $project["name"]) {
+            $errors["name"] = "Проект с таким названием уже существует";
         }
     }
     if (count($errors)) {
@@ -59,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["add_task"])) {
             upload_file($file),
             $date,
             get_user_id($connection, $_SESSION["user"]["email"]),
-            get_project_id($connection, $_POST["project"])
+            get_project_id($connection, $_POST["project"], $user_id)
         );
     }
 }

@@ -34,12 +34,12 @@
                 <option value="">---</option>
                 <?php foreach ($projects as $project): ?>
                     <option
-                        value="<?= $project["name"]; ?>"
+                        value="<?= (isset($project["name"])) ? $project["name"] : ""; ?>"
                         <?php if (isset($_POST["project"])): ?>
                             <?= ($_POST["project"] === $project["name"]) ? "selected" : ""; ?>
                         <?php endif; ?>
                     >
-                        <?= $project["name"]; ?>
+                        <?= (isset($project["name"])) ? $project["name"] : ""; ?>
                     </option>
                 <?php endforeach; ?>
             </select>
