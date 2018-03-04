@@ -32,7 +32,7 @@
                                     <img src="img/user-pic.jpg" width="40" height="40" alt="Пользователь">
                                 </div>
                                 <div class="user-menu__data">
-                                    <p><?= $_SESSION["user"]["name"]; ?></p>
+                                    <p><?= htmlspecialchars($_SESSION["user"]["name"]); ?></p>
                                     <a href="<?= "?logout"; ?>">Выйти</a>
                                 </div>
                             </div>

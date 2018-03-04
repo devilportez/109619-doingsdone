@@ -6,7 +6,7 @@ USE `109619-doingsdone`;
 
 CREATE TABLE `projects` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL UNIQUE,
+  `name` varchar(255) NOT NULL,
   `user_id` int NOT NULL,
   PRIMARY KEY (`id`)
 );

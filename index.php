@@ -14,15 +14,19 @@ $tasks = (isset($_SESSION["user"])) ? get_tasks($connection, $user_id) : [];
 $project_id = 0;
 $show_complete_tasks = 0;
 
-
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["add_project"])) {
     $errors = [];
     $required_fields = [
         "name"
     ];
     foreach ($required_fields as $field) {
-        if (empty($_POST[$field])) {
+        if (empty(trim($_POST[$field]))) {
             $errors[$field] = "Поле обязательно для заполнения";
+        }
+    }
+    foreach ($projects as $project) {
+        if (mb_strtolower(trim($_POST["name"]), "UTF-8") === mb_strtolower($project["name"], "UTF-8")) {
+            $errors["name"] = "Проект с таким названием уже существует";
         }
     }
     if (count($errors)) {
@@ -30,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["add_project"])) {
             "errors" => $errors
         ]);
     } else {
-        add_project($connection, $user_id, $_POST["name"]);
+        add_project($connection, $user_id, trim($_POST["name"]));
     }
 }
 
@@ -40,10 +44,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["add_task"])) {
         "name",
         "project"
     ];
+    $project_id = get_project_id($connection, $_POST["project"], $user_id);
     foreach ($required_fields as $field) {
-        if (empty($_POST[$field])) {
+        if (empty(trim($_POST[$field]))) {
             $errors[$field] = "Поле обязательно для заполнения";
         }
+    }
+    if (!isset($project_id)) {
+        $errors["project"] = "Проектов не найдено";
     }
     if (count($errors)) {
         $modal = set_template("templates/add_task.php", [
@@ -51,22 +59,22 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["add_task"])) {
             "projects" => array_slice($projects, 1)
         ]);
     } else {
-        $date = (!empty($_POST["date"])) ? $_POST["date"] : null;
+        $date = (!empty(trim($_POST["date"]))) ? trim($_POST["date"]) : null;
         $file = (!empty($_FILES["preview"]["name"])) ? $_FILES["preview"] : null;
         add_task(
             $connection,
-            $_POST["name"],
+            trim($_POST["name"]),
             upload_file($file),
             $date,
-            get_user_id($connection, $_SESSION["user"]["email"]),
-            get_project_id($connection, $_POST["project"])
+            $user_id,
+            $project_id
         );
     }
 }
 
 if (isset($_GET["toggle_done"])) {
     $task_id = (int) $_GET["toggle_done"];
-    toggle_done($connection, $task_id);
+    toggle_done($connection, $task_id, $user_id);
     header("Location: " . $_SERVER["HTTP_REFERER"]);
 }
 
@@ -135,15 +143,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
         "email",
         "password"
     ];
-    $user = search_user_by_email($connection, $_POST["email"]);
+    $user = search_user_by_email($connection, trim($_POST["email"]));
     foreach ($required_fields as $field) {
-        if (empty($_POST[$field])) {
+        if (empty(trim($_POST[$field]))) {
             $errors[$field] = "Поле обязательно для заполнения";
         }
     }
-    if (!empty($_POST["email"]) && !filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
+    if (!empty(trim($_POST["email"])) && !filter_var(trim($_POST["email"]), FILTER_VALIDATE_EMAIL)) {
         $errors["email"] = "E-mail введён некорректно";
-    } elseif (!empty($_POST["email"]) && !$user) {
+    } elseif (!empty(trim($_POST["email"])) && !$user) {
         $errors["email"] = "Пользователь не найден";
     }
     if (!empty($_POST["password"]) && !password_verify($_POST["password"], $user["password"])) {

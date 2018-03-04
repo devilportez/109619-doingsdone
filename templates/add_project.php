@@ -11,7 +11,7 @@
                 type="text"
                 name="name"
                 id="project_name"
-                value=""
+                value="<?= (isset($_POST["name"]) ? htmlspecialchars($_POST["name"]) : "") ?>"
                 placeholder="Введите название проекта"
             >
             <?php if (isset($errors["name"])): ?>

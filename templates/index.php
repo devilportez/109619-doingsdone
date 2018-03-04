@@ -94,7 +94,7 @@
                 <?php endif; ?>
             </td>
             <td class="task__date">
-                <?= ($task["deadline"]) ? date("d.m.y", strtotime($task["deadline"])) : ""; ?>
+                <?= ($task["deadline"]) ? date("d.m.y", strtotime(htmlspecialchars($task["deadline"]))) : ""; ?>
             </td>
             <td class="task__controls"></td>
         </tr>

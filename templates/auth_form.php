@@ -33,7 +33,7 @@
                 type="password"
                 name="password"
                 id="password"
-                value="<?= (isset($_POST["password"]) ? htmlspecialchars($_POST["password"]) : "") ?>"
+                value="<?= (isset($_POST["password"]) ? $_POST["password"] : "") ?>"
                 placeholder="Введите пароль"
             >
             <?php if (isset($errors["password"])): ?>
